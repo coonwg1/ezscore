@@ -43,6 +43,7 @@ data_dir = Path('data/zmax')
 
 # Directory to save output figures
 figoutdir = Path('figs')
+figoutdir.mkdir(parents=True, exist_ok=True)
 
 # Automatically find all ZMax-style left-channel EDFs
 edf_file_fullpaths = list(data_dir.rglob('*L.edf'))
