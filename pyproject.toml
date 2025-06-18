@@ -1,0 +1,23 @@
+[project]
+name = "ezscore"
+version = "0.1.0"
+description = "ezscore: Artifact-aware sleepr stage classifiers for forehead EEG"
+authors = [{name = "William G. Coone", email = "will.coon@jhuapl.edu"}]
+dependencies = [
+    "tensorflow==2.15",
+    "keras_nlp==0.9.3",
+    "tf_keras",
+    "mne",
+    "pandas",
+    "numpy",
+    "scikit-learn",
+    "matplotlib",
+    "seaborn",
+    "lspopt",
+    "pyarrow"
+]
+requires-python = ">=3.9"
+[tool.setuptools]
+package-dir = {"" = "src"}
+packages = ["ezscore"]
+

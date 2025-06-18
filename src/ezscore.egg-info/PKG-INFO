@@ -1,0 +1,19 @@
+Metadata-Version: 2.4
+Name: ezscore
+Version: 0.1.0
+Summary: ezscore: Artifact-aware sleepr stage classifiers for forehead EEG
+Author-email: "William G. Coone" <will.coon@jhuapl.edu>
+Requires-Python: >=3.9
+License-File: LICENSE
+Requires-Dist: tensorflow==2.15
+Requires-Dist: keras_nlp==0.9.3
+Requires-Dist: tf_keras
+Requires-Dist: mne
+Requires-Dist: pandas
+Requires-Dist: numpy
+Requires-Dist: scikit-learn
+Requires-Dist: matplotlib
+Requires-Dist: seaborn
+Requires-Dist: lspopt
+Requires-Dist: pyarrow
+Dynamic: license-file

@@ -1,0 +1,11 @@
+tensorflow==2.15
+keras_nlp==0.9.3
+tf_keras
+mne
+pandas
+numpy
+scikit-learn
+matplotlib
+seaborn
+lspopt
+pyarrow

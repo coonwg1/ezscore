@@ -1,0 +1,8 @@
+LICENSE
+README.md
+pyproject.toml
+src/ezscore.egg-info/PKG-INFO
+src/ezscore.egg-info/SOURCES.txt
+src/ezscore.egg-info/dependency_links.txt
+src/ezscore.egg-info/requires.txt
+src/ezscore.egg-info/top_level.txt
