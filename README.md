@@ -14,7 +14,7 @@
 - 🧪 Artifact-aware: isolates artifact for robust, accurate sleep staging
 
 
-
+Copyright (C) 2025 Johns Hopkins University Applied Physics Lab
 ---
 
 # 📢 What's New (June 2025)
