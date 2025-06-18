@@ -35,8 +35,8 @@ The image below shows the updated model's confusion matrix on the same test set 
 
 # Install
 
-### Install Python environment / package manager
-We use the `uv` package manager.  You can find full install documentation here: https://docs.astral.sh/uv/getting-started/installation/
+### Install Python environment / package manager 
+We use the `uv` package manager (you can skip this step if you already use `uv`).  You can find full install documentation here: https://docs.astral.sh/uv/getting-started/installation/
 
 For macOS and linux, you can use `curl` to download the script and execute it with sh:
 
