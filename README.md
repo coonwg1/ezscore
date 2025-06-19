@@ -65,6 +65,15 @@ If everything installed correctly, the script should open a new figure window wi
 <p align="center">
   <img src=".assets/hypnos_ez6.png" alt="Demo script output using included sample data (ZMax EDFs) and the latest `ez6` model (corresponds to the confusion matrix above)." width="900">
 </p>
+> **Figure**: Demo script output using included sample data (ZMax EDFs) and the latest `ez6` model (corresponds to the confusion matrix above)...
+
+If you're curious, here's the ground truth stages from concurrently acquired PSG signals and consensus scoring by multiple trained experts:
+
+<p align="center">
+  <img src=".assets/hypnos_psg.png" alt="PSG ground truth" width="900">
+</p>
+> **Figure**: Ground truth PSG-derived sleep stages
+
 
 ---
 
