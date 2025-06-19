@@ -70,7 +70,7 @@ If everything installed correctly, the script should open a new figure window wi
 If you're curious, here's the ground truth stages from concurrently acquired PSG signals and consensus scoring by multiple trained experts:
 
 <p align="center">
-  <img src=".assets/hypnos_psg.png" alt="PSG ground truth" width="900">
+  <img src=".assets/hypno_psg.png" alt="PSG ground truth" width="900">
 </p>
 > **Figure**: Ground truth PSG-derived sleep stages
 
