@@ -68,7 +68,13 @@ If everything installed correctly, the script should open a new figure window wi
 
 > **Figure**: Demo script output using included sample data (ZMax EDFs) and the latest `ez6` model (corresponds to the confusion matrix above)...
 
+And below are the "ground truth" sleep stages derived from concurrently recorded PSG and consensus scoring by multiple trained experts. 
 
+<p align="center">
+  <img src=".assets/hypnos_psg.png" alt="PSG" width="900">
+</p>
+
+> **Figure**: PSG ground truth for demo example.
 ---
 
 If you use ezscore models (`ez6`, `ez6rt`, etc.), please cite our paper: https://www.biorxiv.org/content/10.1101/2025.06.02.657451v1
