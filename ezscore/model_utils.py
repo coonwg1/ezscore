@@ -39,7 +39,7 @@ def preproc( raw, normalize=True ):
         sdata = raw.get_data()
         for ch in range(sdata.shape[0]):
             sig = sdata[ch]
-            mad = np.median(np.abs(sig - np.median(sig))) + 1e-8
+            mad = np.median(np.abs(sig - np.median(sig)))  
             norm = (sig - np.median(sig)) / mad
             iqr = np.subtract(*np.percentile(norm, [75, 25]))
             sdata[ch] = np.clip(norm, -20 * iqr, 20 * iqr)
@@ -47,8 +47,8 @@ def preproc( raw, normalize=True ):
         scale = 1 
     else:
         scale = 1_000_000
-    eegL = raw.get_data(picks="eegl").flatten() * scale
-    eegR = raw.get_data(picks="eegr").flatten() * scale
+    eegL = sdata[0,:] * scale
+    eegR = sdata[1,:] * scale
     data_as_array = np.vstack((eegL.reshape(1, -1), eegR.reshape(1, -1)))
 
     return data_as_array, raw 
@@ -255,7 +255,10 @@ def plot_summary(hyp, hypdens, spctgm_object, titl="ezscore-f"):
     SxxL=spctgm_object.SxxL
     SxxR=spctgm_object.SxxR
 
-    allf = [['a', 'ar'], ['b', 'br'], ['c', 'cr'], ['d', 'nr']]
+    allf = [['a', 'ar'], 
+            ['b', 'br'], 
+            ['c', 'cr'], 
+            ['d', 'nr']]
     sns.set(style="darkgrid")
     sns.set(font_scale=1)
     sns.set_theme()
@@ -270,8 +273,8 @@ def plot_summary(hyp, hypdens, spctgm_object, titl="ezscore-f"):
 
     # Plot hypnogram
     hyp_plot = hyp.copy()
-    hyp_plot = np.where(hyp_plot == 3, -2, hyp_plot)
-    hyp_plot = np.where(hyp_plot == 1, 3, hyp_plot)
+    hyp_plot = np.where(hyp_plot == 3, -2, hyp_plot)  # just for plotting purposes, so that N3 is the first from the bottom, then  N2 is 2nd, then N1 is third,...
+    hyp_plot = np.where(hyp_plot == 1, 3, hyp_plot) 
     hyp_plot = np.where(hyp_plot == -2, 1, hyp_plot)
     axs['b'].plot(t, hyp_plot )
     axs['b'].set_xlabel('Time (hrs)')
