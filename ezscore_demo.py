@@ -1,7 +1,7 @@
 # ezscore_demo.py
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 #
-#     Copyright: JHU/APL 18 June 2025
+#     Copyright (c) 2025 The Johns Hopkins University Applied Physics Laboratory LLC
 #     Author: William G. Coon, PhD
 #     author email: will.coon@jhuapl.edu
 #     repo: https://github.com/coonwg1/ezscore/tree/main
