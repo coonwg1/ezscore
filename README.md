@@ -1,7 +1,7 @@
-# ezscore-f
-<p align="center">
+<p align="right">
   <img src=".assets/logo.jpg" alt="ezscore-f logo" width="100"/>
 </p>
+# ezscore-f
 ### Pretrained artifact-aware sleep stage classifiers for forehead EEG. ###
 
 <p align="center">  
