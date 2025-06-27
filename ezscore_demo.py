@@ -35,10 +35,10 @@ from ezscore.model_utils import (
 # ====================================================================================================
 
 # Choose which pretrained model to use: 
-#   'ez6'    → expects normalized input (offline analysis)
-#   'ez6rt'  → expects raw microvolt input (useful for real-time scoring)
+#   'ez6'    → expects normalized input (offline analysis, fast)
+#   'ez6rt'  → expects raw microvolt input (useful for real-time scoring, fast)
 #   'ez6moe' → mixture-of-experts model that averages predictions from an ensemble of differently trained 'ez6' models  NOTE: THIS WILL LOAD SLOWLY BUT CAN BE MORE ACCURATE
-mdl = 'ez6'
+mdl = 'ez6moe'
 
 # Directory with ZMax EDF files. Must include both *L.edf and *R.edf files.
 data_dir = Path('data/zmax')
@@ -72,7 +72,7 @@ model = load_model( f"model/{mdl}" )
 # For demonstration, we loop through all detected EDF pairs
 for edf_path in edf_file_fullpaths:
 
-    print(f"Running ezscore demo for: {edf_path.name}")
+    print(f"Running ezscore demo on: {edf_path.name}")
 
     # ------------------------------------------------------------------------
     # STEP 1: LOAD AND PREPROCESS EEG
