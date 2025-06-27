@@ -1,10 +1,10 @@
 # ezscore-f
 ### Pretrained artifact-aware sleep stage classifiers for forehead EEG. ###
 
-<p align="center">
+<p align="center">  
+  <img src=".assets/zmax-montage-art-aware.png" alt="**ezscore is for 2-channel forehead EEG.** Figure is from *Coon et al. 2025*: ezscore models were trained on ZMax data and validated on ZMax (B) and DCM (D) data." width="900">
   <figcaption><strong>ezscore-f is for 2-channel forehead EEG, and is <em>artifact-aware</em>.</strong>  ezscore-f automatically detects and isolates signal artifact commonly encountered in forehead EEG devices.  Figure from <em>Coon et al. 2025</em>: ezscore models were trained on ZMax data and validated on ZMax (B) and DCM (D) data. CGX (C) validation is in-progress (coming soon!). *Note that CGX is NOT yet officially supported*.
   </figcaption>
-  <img src=".assets/zmax-montage-art-aware.png" alt="**ezscore is for 2-channel forehead EEG.** Figure is from *Coon et al. 2025*: ezscore models were trained on ZMax data and validated on ZMax (B) and DCM (D) data." width="900">
 </p>
 
 ### Pretrained artifact-aware sleep stage classifiers for forehead EEG. ###
