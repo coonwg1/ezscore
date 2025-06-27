@@ -55,7 +55,6 @@ normalize = True if mdl in ('ez6', 'ez6moe') else False
 
 # Ensure ez6moe model is downloaded if selected
 if mdl == 'ez6moe' and not os.path.exists("model/ez6moe"):
-    print("Downloading ez6moe model...")
     download_ez6moe()
 
 # ====================================================================================================
