@@ -276,7 +276,7 @@ def plot_summary(hyp, hypdens, spctgm_object, titl="ezscore-f"):
     hyp_plot = np.where(hyp_plot == 3, -2, hyp_plot)  # just for plotting purposes, so that N3 is the first from the bottom, then  N2 is 2nd, then N1 is third,...
     hyp_plot = np.where(hyp_plot == 1, 3, hyp_plot) 
     hyp_plot = np.where(hyp_plot == -2, 1, hyp_plot)
-    axs['b'].plot(t, hyp_plot )
+    axs['b'].plot(t, hyp_plot, drawstyle="steps-post")
     axs['b'].set_xlabel('Time (hrs)')
     axs['b'].set_ylabel('Hypnogram')
     axs['b'].set_title(f'{titl} Stages', fontweight='bold')
