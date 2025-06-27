@@ -47,8 +47,8 @@ def preproc( raw, normalize=True ):
         scale = 1 
     else:
         scale = 1_000_000
-    eegL = sdata[0,:] * scale
-    eegR = sdata[1,:] * scale
+    eegL = raw.get_data(picks="eegl").flatten() * scale
+    eegR = raw.get_data(picks="eegr").flatten() * scale
     data_as_array = np.vstack((eegL.reshape(1, -1), eegR.reshape(1, -1)))
 
     return data_as_array, raw 
