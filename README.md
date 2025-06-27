@@ -48,7 +48,11 @@ If your system doesn't have `curl`, you can use `wget`:
 
 ### Install ezscore
 Once you have `uv` installed, you can install `ezscore-f` from Terminal after navigating to the directory of your choice:
+
 ```bash
+git clone https://github.com/coonwg1/ezscore.git
+cd ezscore
+
 uv venv
 uv pip install -e .
 source .venv/bin/activate
