@@ -38,7 +38,7 @@ from ezscore.model_utils import (
 #   'ez6'    → expects normalized input (offline analysis)
 #   'ez6rt'  → expects raw microvolt input (useful for real-time scoring)
 #   'ez6moe' → mixture-of-experts model that averages predictions from an ensemble of differently trained 'ez6' models  NOTE: THIS WILL LOAD SLOWLY
-mdl = 'ez6moe'
+mdl = 'ez6'
 
 # Directory with ZMax EDF files. Must include both *L.edf and *R.edf files.
 data_dir = Path('data/zmax')
