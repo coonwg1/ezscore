@@ -322,3 +322,14 @@ def plot_summary(hyp, hypdens, spctgm_object, titl="ezscore-f"):
 
     return axs
 
+
+from huggingface_hub import snapshot_download
+def download_ez6moe():
+    print("📥 Downloading ez6moe model from Hugging Face...")
+    snapshot_download(
+        repo_id="coonwg1/ez6moe",
+        repo_type="model",
+        local_dir="model",
+        local_dir_use_symlinks=False,
+        resume_download=True,
+    )

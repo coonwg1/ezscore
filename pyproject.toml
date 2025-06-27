@@ -7,6 +7,7 @@ dependencies = [
     "tensorflow==2.15",
     "keras_nlp==0.9.3",
     "tf_keras",
+    "huggingface-hub>=0.33.1",
     "mne",
     "pandas",
     "numpy",
@@ -20,4 +21,6 @@ requires-python = ">=3.9"
 [tool.setuptools]
 package-dir = {"" = "src"}
 packages = ["ezscore"]
-
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"

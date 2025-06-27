@@ -26,7 +26,8 @@ from ezscore.model_utils import (
     preproc,       # preprocesses Raw object: minimal filtering, normalization, unit scaling
     ezpredict,     # runs model prediction and returns hypnogram + softmax
     ezspectgm,     # computes multitaper spectrograms
-    plot_summary   # generates hypnogram/softmax/spectrogram plot
+    plot_summary,   # generates hypnogram/softmax/spectrogram plot
+    download_ez6moe
 )
 
 # ====================================================================================================
@@ -52,11 +53,17 @@ edf_file_fullpaths = list(data_dir.rglob('*L.edf'))
 # Determine whether to apply normalization based on selected model
 normalize = True if mdl in ('ez6', 'ez6moe') else False
 
+# Ensure ez6moe model is downloaded if selected
+if mdl == 'ez6moe' and not os.path.exists("model/ez6moe"):
+    print("Downloading ez6moe model...")
+    download_ez6moe()
+
 # ====================================================================================================
 #                                       LOAD MODEL
 # ====================================================================================================
 
 # Load trained ezscore model (from model/ez6 or model/ez6rt)
+print(f"Loading {mdl} model...")
 model = load_model( f"model/{mdl}" )
 
 # ====================================================================================================
