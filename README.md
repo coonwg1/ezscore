@@ -1,6 +1,6 @@
 # ezscore-f
 <p align="center">
-  <img src="path/to/your/logo.png" alt="ezscore-f logo" width="100"/>
+  <img src=".assets/logo.png" alt="ezscore-f logo" width="100"/>
 </p>
 ### Pretrained artifact-aware sleep stage classifiers for forehead EEG. ###
 
