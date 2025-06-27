@@ -1,7 +1,7 @@
 # ezscore_demo.py
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 #
-#     Copyright (c) 2025 The Johns Hopkins University Applied Physics Laboratory LLC
+#     Copyright: JHU/APL 27 June 2025
 #     Author: William G. Coon, PhD
 #     author email: will.coon@jhuapl.edu
 #     repo: https://github.com/coonwg1/ezscore/tree/main
@@ -36,7 +36,8 @@ from ezscore.model_utils import (
 # Choose which pretrained model to use: 
 #   'ez6'    → expects normalized input (offline analysis)
 #   'ez6rt'  → expects raw microvolt input (useful for real-time scoring)
-mdl = 'ez6'
+#   'ez6moe' → mixture-of-experts model that averages predictions from an ensemble of differently trained 'ez6' models  NOTE: THIS WILL LOAD SLOWLY
+mdl = 'ez6moe'
 
 # Directory with ZMax EDF files. Must include both *L.edf and *R.edf files.
 data_dir = Path('data/zmax')
@@ -49,7 +50,7 @@ figoutdir.mkdir(parents=True, exist_ok=True)
 edf_file_fullpaths = list(data_dir.rglob('*L.edf'))
 
 # Determine whether to apply normalization based on selected model
-normalize = True if mdl == 'ez6' else False
+normalize = True if mdl in ('ez6', 'ez6moe') else False
 
 # ====================================================================================================
 #                                       LOAD MODEL
@@ -108,3 +109,4 @@ for edf_path in edf_file_fullpaths:
     fig_save_path = figoutdir / f"hypnos_{mdl}.png"
     plt.savefig( fig_save_path, format='png', dpi=150, bbox_inches='tight' )
     plt.show()
+
