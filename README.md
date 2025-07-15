@@ -47,6 +47,10 @@ If your system doesn't have `curl`, you can use `wget`:
 
     `wget -qO- https://astral.sh/uv/install.sh | sh`
 
+For Windows, you can use `powershell`:
+
+    `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`
+
 ### Install ezscore
 Once you have `uv` installed, you can install `ezscore-f` from Terminal after navigating to the directory of your choice:
 
