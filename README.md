@@ -41,15 +41,15 @@ We use the `uv` package manager (you can skip this step if you already use `uv`)
 
 For macOS and linux, you can use `curl` to download the script and execute it with sh:
 
-    `curl -LsSf https://astral.sh/uv/install.sh | sh`
+    curl -LsSf https://astral.sh/uv/install.sh | sh
 
 If your system doesn't have `curl`, you can use `wget`:
 
-    `wget -qO- https://astral.sh/uv/install.sh | sh`
+    wget -qO- https://astral.sh/uv/install.sh | sh
 
 For Windows, you can use `powershell`:
 
-    `powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"`
+    powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 
 ### Install ezscore
 Once you have `uv` installed, you can install `ezscore-f` from Terminal after navigating to the directory of your choice:
