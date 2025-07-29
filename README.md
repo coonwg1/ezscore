@@ -84,6 +84,15 @@ And below are the "ground truth" sleep stages derived from concurrently recorded
 </p>
 
 > **Figure**: PSG ground truth for demo example.
+
+
+## Troubleshooting 
+
+If you encounter an issue installing ezscore on your machine, let us know!  Or, peruse these helpful notes from user community feedback we have received already:
+
+**`uv` issues**
+- Users who already use `uv` may be familiar with other `uv` syntax for setting up an encapsulated Python environment, like `uv sync`.  Some users of macOS machines have noted issues with tensorflow dependencies during installation when using `uv sync` instead of the two lines we suggest in our install instructions (`uv venv` followed by `uv pip install -e .`).  To address this issue, try the installation again using our instructions (do not use `uv sync`). 
+
 ---
 
 If you use ezscore models (`ez6`, `ez6rt`, `ez6moe` etc.), please cite our paper: https://www.biorxiv.org/content/10.1101/2025.06.02.657451v1
