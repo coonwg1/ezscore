@@ -332,4 +332,5 @@ def download_ez6moe():
         local_dir="model",
         local_dir_use_symlinks=False,
         resume_download=True,
+        timeout=360  # timeout in seconds (e.g., 3 minutes)
     )
