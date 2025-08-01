@@ -91,7 +91,13 @@ And below are the "ground truth" sleep stages derived from concurrently recorded
 If you encounter an issue installing ezscore on your machine, let us know!  Or, peruse these helpful notes from user community feedback we have received already:
 
 **`uv` issues**
-- Users who already use `uv` may be familiar with other `uv` syntax for setting up an encapsulated Python environment, like `uv sync`.  Some users of macOS machines have noted issues with tensorflow dependencies during installation when using `uv sync` instead of the two lines we suggest in our install instructions (`uv venv` followed by `uv pip install -e .`).  To address this issue, try the installation again using our instructions (do not use `uv sync`). 
+- Users who already use `uv` may be familiar with other `uv` syntax for setting up an encapsulated Python environment, like `uv sync`.  Some users of macOS machines have noted issues with tensorflow dependencies during installation when using `uv sync` instead of the two lines we suggest in our install instructions (`uv venv` followed by `uv pip install -e .`).  To address this issue, try the installation again using our instructions (do not use `uv sync`).
+- The most frequently reported errors during install can be addressed by increasing the timeout limit for uv: From a Terminal, run:
+```bash 
+export UV_HTTP_TIMEOUT=999
+```
+and then try the installation again.
+
 
 ---
 
