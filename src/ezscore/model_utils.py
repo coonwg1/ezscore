@@ -155,7 +155,7 @@ def reshape_for_decoder( data_as_array,
         (NUM-SEQUENCES x NUM-EPOCHS-PER-SEQUENCE x NUM-SAMPLES-PER-EPOCH x NUM-CHANNELS)
 
     This is the format required for input to the CNN-RNN or CNN-transformer-RNN models based on
-    Coon & Pubjabi (2021).
+    Coon & Pubjabi (2021) and continued in Coon et al. (2025).
     '''
 
     data = data_as_array 

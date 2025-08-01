@@ -3,3 +3,9 @@ model/ez6moe
 figs
 .DS_Store
 **/.DS_Store
+src/ezscore/__pycache__
+dist
+ezscore-0.1.0.tar.gz
+src/ezscore.egg-info
+src/ezscore.egg-info/PKG-INFO
+src/ezscore.egg-info/requires.txt

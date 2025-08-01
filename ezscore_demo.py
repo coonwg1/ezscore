@@ -1,7 +1,8 @@
 # ezscore_demo.py
 # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 #
-#     Copyright: JHU/APL 27 June 2025
+#     Copyright: 3 July (c) 2025 The Johns Hopkins University Applied Physics Laboratory LLC (JHU/APL)
+#     License:   MIT License
 #     Author: William G. Coon, PhD
 #     author email: will.coon@jhuapl.edu
 #     repo: https://github.com/coonwg1/ezscore/tree/main
@@ -22,7 +23,7 @@ from matplotlib import pyplot as plt
 from tensorflow.keras.models import load_model
 
 # Import ezscore utilities
-from ezscore.model_utils import (
+from src.ezscore.model_utils import (
     load_zmax,     # loads paired ZMax EDF files into MNE Raw
     preproc,       # preprocesses Raw object: minimal filtering, normalization, unit scaling
     ezpredict,     # runs model prediction and returns hypnogram + softmax
