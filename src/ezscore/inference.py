@@ -37,24 +37,37 @@ def ezscore( data_matrix, sfreq=64, model_name="ez6moe" ):
         data_matrix = data_matrix.T  # ensure (channels, time)
 
     # Create MNE RawArray object
-    info = mne.create_info(ch_names=["Ch1", "Ch2"][:data_matrix.shape[0]],
+    info = mne.create_info(ch_names=["eegl", "eegr"][:data_matrix.shape[0]],
                            sfreq=sfreq, ch_types="eeg")
     raw = mne.io.RawArray(data_matrix, info, verbose=False)
     raw.filter(l_freq=0.5, h_freq=None, verbose=False)
     raw.resample(sfreq, verbose=False)
 
-    # Download model if not present
-    model_dir = os.path.join(os.path.expanduser("~"), ".ezscore_models", model_name)
-    model_file = os.path.join(model_dir)
-    if not os.path.exists(model_file):
-        print(f"Downloading '{model_name}' model from Hugging Face...")
-        snapshot_download(repo_id=f"coonwg1/{model_name}",
-                          local_dir=model_dir,
-                          repo_type="model")
+    # # Download model if not present
+    # model_dir = os.path.join(os.path.expanduser("~"), ".ezscore_models")
+    # model_file = os.path.join(model_dir)
+    # if not os.path.exists(model_file):
+    #     print(f"Downloading '{model_name}' model from Hugging Face...")
+    #     snapshot_download(repo_id=f"coonwg1/{model_name}",
+    #                       local_dir=model_dir,
+    #                       repo_type="model")
+    CACHE_DIR = os.path.expanduser("~/.ezscore_models")
+    model_dir = os.path.join(CACHE_DIR, model_name)
+
+    # Download model from Hugging Face if not already present
+    if not os.path.exists(model_dir):
+        print(f"📥 Downloading '{model_name}' model from Hugging Face...")
+        snapshot_download(
+            repo_id=f"coonwg1/{model_name}",
+            repo_type="model",
+            local_dir=model_dir,
+            local_dir_use_symlinks=False,
+            resume_download=True,
+        )
 
     # Load model
-    model = load_model(model_dir, compile=False)
+    model = load_model( os.path.join(model_dir, model_name), compile=False)
 
     # Predict
-    hypnogram, yprobs = ezpredict(raw, model=model, mdl=model_name)
+    hypnogram, yprobs = ezpredict(model=model, data=raw)
     return hypnogram, yprobs

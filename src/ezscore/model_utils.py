@@ -88,7 +88,7 @@ def ezpredict(model, data):
         ypred = np.concatenate([ypred_main, ypred_tail], axis=0)  # shape (total_epochs, 6)
 
     # Clip output to match number of full 30s epochs in original signal
-    num_epochs = np.arange(0, data.shape[1], 64 * 30).shape[0]
+    num_epochs = np.arange(0, data_ar.shape[1], 64 * 30).shape[0]
     ypred = ypred[:num_epochs, :]
 
     # Reorder columns to match final label schema: [W, N1, N2, N3, REM, ART]
@@ -97,7 +97,7 @@ def ezpredict(model, data):
     probs = ypred
     hypnogram = tf.argmax(ypred.numpy(), axis=1).numpy() + 1
 
-    return probs, hypnogram
+    return hypnogram, probs
 
         # |-------------------- FYI: HERE'S AN EXPLAINER ON WHAT WE'RE DOING WITH THE UNMODIFIED MODEL OUTPUT TO GET IT INTO INTUITIVE ORDERING... ---------------------|
 
