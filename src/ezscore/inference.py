@@ -45,7 +45,7 @@ def ezscore( data_matrix, sfreq=64, model_name="ez6moe" ):
 
     # Download model if not present
     model_dir = os.path.join(os.path.expanduser("~"), ".ezscore_models", model_name)
-    model_file = os.path.join(model_dir, "model.keras")
+    model_file = os.path.join(model_dir)
     if not os.path.exists(model_file):
         print(f"Downloading '{model_name}' model from Hugging Face...")
         snapshot_download(repo_id=f"coonwg1/{model_name}",
