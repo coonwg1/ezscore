@@ -1,6 +1,6 @@
 [project]
 name = "ezscore"
-version = "0.1.4"
+version = "0.1.5"
 description = "ezscore: Artifact-aware sleepr stage classifiers for forehead EEG"
 authors = [{name = "William G. Coon", email = "will.coon@jhuapl.edu"}]
 dependencies = [
