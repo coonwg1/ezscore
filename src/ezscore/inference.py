@@ -53,7 +53,7 @@ def ezscore( data_matrix, sfreq=64, model_name="ez6moe" ):
                           repo_type="model")
 
     # Load model
-    model = load_model(model_file, compile=False)
+    model = load_model(model_dir, compile=False)
 
     # Predict
     hypnogram, yprobs = ezpredict(raw, model=model, mdl=model_name)
