@@ -34,7 +34,7 @@ def load_zmax( edf_path ):
 
 
 def preproc( raw, normalize=True ):
-    raw = raw.resample(sfreq=64).filter(l_freq=0.5, h_freq=None) #redundant, but ensures data is at 64Hz, then high-pass filters at 0.5Hz
+    raw = raw.resample(sfreq=64).filter(l_freq=0.5, h_freq=None) #resampling may be redundant, but ensures data is at 64Hz; either way then high-pass filters at 0.5Hz
     if normalize:
         sdata = raw.get_data()
         for ch in range(sdata.shape[0]):
