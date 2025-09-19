@@ -25,6 +25,7 @@ from tensorflow.keras.models import load_model
 # Import ezscore utilities
 from src.ezscore.model_utils import (
     load_zmax,     # loads paired ZMax EDF files into MNE Raw
+    load_dcm,      # loads single-file DCM EDF files into MNE Raw
     preproc,       # preprocesses Raw object: minimal filtering, normalization, unit scaling
     ezpredict,     # runs model prediction and returns hypnogram + softmax
     ezspectgm,     # computes multitaper spectrograms
@@ -39,8 +40,8 @@ from src.ezscore.model_utils import (
 # Choose which pretrained model to use: 
 #   'ez6'    → expects normalized input (offline analysis, fast)
 #   'ez6rt'  → expects raw microvolt input (useful for real-time scoring, fast)
-#   'ez6moe' → mixture-of-experts model that averages predictions from an ensemble of differently trained 'ez6' models  NOTE: THIS WILL LOAD SLOWLY BUT CAN BE MORE ACCURATE
-mdl = 'ez6moe'
+#   'ez6moe' → mixture-of-experts model that averages predictions from an ensemble of differently trained 'ez6' models  NOTE: THIS WILL LOAD SLOWLY BUT *CAN* BE MORE ACCURATE
+mdl = 'ez6'
 
 # Directory with ZMax EDF files. Must include both *L.edf and *R.edf files.
 data_dir = Path('data/zmax')
@@ -50,7 +51,7 @@ figoutdir = Path('figs')
 figoutdir.mkdir(parents=True, exist_ok=True)
 
 # Automatically find all ZMax-style left-channel EDFs
-edf_file_fullpaths = list(data_dir.rglob('*L.edf'))
+edf_file_fullpaths = list(data_dir.rglob('*.edf'))
 
 # Determine whether to apply normalization based on selected model
 normalize = True if mdl in ('ez6', 'ez6moe') else False
@@ -74,14 +75,21 @@ model = load_model( f"model/{mdl}" )
 # For demonstration, we loop through all detected EDF pairs
 for edf_path in edf_file_fullpaths:
 
+    if edf_path.name.lower().endswith('r.edf'):
+        continue  #skip right-channel files (we'll load ZMax pairs w.r.t. the L file only)
+
     print(f"Running ezscore demo on: {edf_path.name}")
 
     # ------------------------------------------------------------------------
     # STEP 1: LOAD AND PREPROCESS EEG
     # ------------------------------------------------------------------------
 
-    # Load ZMax EEG L+R channels as MNE Raw object
-    raw = load_zmax( edf_path )
+    # Load EEG L+R channels as MNE Raw object
+    # Route: L.edf => paired ZMax; anything else => single-file DCM
+    if edf_path.name.lower().endswith("l.edf"):
+        raw = load_zmax(edf_path)     # uses ...L.edf and its matching ...R.edf
+    else:
+        raw = load_dcm(edf_path)      # single-file EDF (e.g., DCM)
 
     # Preprocess the data:
     #   - Resample to 64 Hz
@@ -97,7 +105,7 @@ for edf_path in edf_file_fullpaths:
     # Run prediction: returns
     #   - ypred: (N_epochs x 6) softmax probabilities
     #   - hyp: integer-coded hypnogram  (1=N1, 2=N2, 3=N3, 4=REM, 5=W, 6=ART)
-    ypred, hyp = ezpredict( model=model, data=data_array )
+    hyp, ypred = ezpredict( model=model, data=data_array )
 
     # ------------------------------------------------------------------------
     # STEP 3: COMPUTE SPECTROGRAMS

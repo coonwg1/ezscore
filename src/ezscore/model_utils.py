@@ -33,6 +33,17 @@ def load_zmax( edf_path ):
     return raw
 
 
+def load_dcm( edf_path ):
+    """Load DCM EDF file and return MNE Raw object."""
+    fs=64  #for now, model expects data sampled at 64Hz
+    rawtmp = mne.io.read_raw_edf(edf_path, preload=True).resample(fs) 
+    data = rawtmp.get_data()
+    info = mne.create_info(['eegl', 'eegr'], sfreq=fs, ch_types=['eeg', 'eeg'])
+    raw = mne.io.RawArray(data, info)
+
+    return raw
+
+
 def preproc( raw, normalize=True ):
     raw = raw.resample(sfreq=64).filter(l_freq=0.5, h_freq=None) #resampling may be redundant, but ensures data is at 64Hz; either way then high-pass filters at 0.5Hz
     if normalize:
