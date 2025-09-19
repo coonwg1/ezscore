@@ -23,8 +23,8 @@ from pathlib import Path
 def load_zmax( edf_path ):
     """Load ZMax-style left/right EDF pair and return MNE Raw object."""
     fs=64  #for now, model expects data sampled at 64Hz
-    rawL = mne.io.read_raw_edf(edf_path, preload=True).resample(fs).filter(l_freq=0.5, h_freq=None)
-    rawR = mne.io.read_raw_edf(Path(str(edf_path)[:-5] + "R.edf"), preload=True).resample(fs).filter(l_freq=0.5, h_freq=None)
+    rawL = mne.io.read_raw_edf(edf_path, preload=True).resample(fs) 
+    rawR = mne.io.read_raw_edf(Path(str(edf_path)[:-5] + "R.edf"), preload=True).resample(fs) 
     dataL = rawL.get_data().flatten()
     dataR = rawR.get_data().flatten()
     info = mne.create_info(['eegl', 'eegr'], sfreq=fs, ch_types=['eeg', 'eeg'])
@@ -34,7 +34,7 @@ def load_zmax( edf_path ):
 
 
 def preproc( raw, normalize=True ):
-    raw = raw.resample(sfreq=64).filter(l_freq=0.5, h_freq=None) #redundant, but ensures data is at 64Hz, then high-pass filters at 0.5Hz
+    raw = raw.resample(sfreq=64).filter(l_freq=0.5, h_freq=None) #resampling may be redundant, but ensures data is at 64Hz; either way then high-pass filters at 0.5Hz
     if normalize:
         sdata = raw.get_data()
         for ch in range(sdata.shape[0]):

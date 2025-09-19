@@ -101,6 +101,6 @@ and then try the installation again.
 
 ---
 
-If you use ezscore models (`ez6`, `ez6rt`, `ez6moe` etc.), please cite our paper: https://www.biorxiv.org/content/10.1101/2025.06.02.657451v1
+If you use ezscore models (`ez6`, `ez6rt`, `ez6moe` etc.), please cite our paper: https://www.biorxiv.org/content/10.1101/2025.06.02.657451v2
 - Coon WG, Zerr P, Milsap G, Sikder N, Smith M, Dresler M, Reid M. "*ezscore-f: A Set of Freely Available, Validated Sleep Stage Classifiers for Forehead EEG.*" bioRxiv, 2025, doi: 10.1101/2025.06.02.657451. 
 
