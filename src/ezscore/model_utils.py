@@ -45,8 +45,10 @@ def preproc( raw, normalize=True ):
             sdata[ch] = np.clip(norm, -20 * iqr, 20 * iqr)
         raw._data = sdata
         scale = 1 
+        print(f"Data normalized to 0 mean, unit variance, and outlier-clipped at [-20, 20] IQR.")
     else:
         scale = 1_000_000
+        print(f"Data not normalized.  Assuming data input is in units of VOLTS.  Scaling by {scale} to convert to microvolts for the model.")
     eegL = raw.get_data(picks="eegl").flatten() * scale
     eegR = raw.get_data(picks="eegr").flatten() * scale
     data_as_array = np.vstack((eegL.reshape(1, -1), eegR.reshape(1, -1)))
@@ -54,15 +56,15 @@ def preproc( raw, normalize=True ):
     return data_as_array, raw 
 
 
-def ezpredict(model, data):
+def ezpredict( model, data ):
     """Run ezscore model inference and remap labels to final hypnogram integers.
     Accepts either preprocessed array data or an MNE Raw object.
     """
     if isinstance(data, mne.io.BaseRaw):
-        data_ar, _ = preproc(data)  # apply preprocessing if MNE Raw object passed
+        data_ar, _ = preproc( data )  # apply preprocessing if MNE Raw object passed
     else:
         data_ar = data  # assume data is already a preprocessed array
-    input_array = reshape_for_decoder(data_as_array=data_ar, fs=64)
+    input_array = reshape_for_decoder( data_as_array=data_ar, fs=64 ) #hard-specified for resampling to model's operating frequency of 64Hz
     print("Input array shape for model:", input_array.shape)
 
     num_full_seqs = input_array.shape[0] - 1
@@ -213,7 +215,7 @@ def reshape_for_decoder( data_as_array,
  
 
 
-def ezspectgm(raw, sfreq=64, win_sec=30, overlap_sec=15, fmin=0, fmax=30, trim_perc=5):
+def ezspectgm( raw, sfreq=64, win_sec=30, overlap_sec=15, fmin=0, fmax=30, trim_perc=5 ):
     """Compute left and right channel spectrograms from MNE Raw object."""
     from lspopt import spectrogram_lspopt
     dataL = raw.get_data(picks=[0]).T.flatten()
@@ -243,7 +245,7 @@ def ezspectgm(raw, sfreq=64, win_sec=30, overlap_sec=15, fmin=0, fmax=30, trim_p
 
 
 
-def plot_summary(hyp, hypdens, spctgm_object, titl="ezscore-f"):
+def plot_summary( hyp, hypdens, spctgm_object, titl="ezscore-f" ):
     """Plot hypnogram, class probabilities, and dual-channel spectrograms."""
     import seaborn as sns
     import matplotlib.pyplot as plt
