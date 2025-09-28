@@ -125,10 +125,14 @@ for edf_path in edf_file_fullpaths:
     # Plot softmax, hypnogram, and spectrogram summary
     axs = plot_summary( hyp=hyp, hypdens=ypred, spctgm_object=ezs, titl=mdl )
 
-    # Save hypnogram CSV and display the figure
+    # Save hypnogram CSV... 
     csv_save_path = figoutdir / f"hypnos_{mdl}_{edf_path.name}.csv"
     pd.DataFrame(np.asarray(hyp, dtype=int)).to_csv(csv_save_path, index=False, header=False)
+
+    # Save figure visualizing results
     fig_save_path = figoutdir / f"hypnos_{mdl}_{edf_path.name}.png"
     plt.savefig( fig_save_path, format='png', dpi=150, bbox_inches='tight' )
-    plt.show()
+
+    # Optinonal: display figure
+    plt.show() # you'll probably want to disable this if processing many files
 
