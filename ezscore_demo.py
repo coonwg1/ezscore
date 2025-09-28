@@ -122,7 +122,7 @@ for edf_path in edf_file_fullpaths:
     axs = plot_summary( hyp=hyp, hypdens=ypred, spctgm_object=ezs, titl=mdl )
 
     # Save and display the figure
-    fig_save_path = figoutdir / f"hypnos_{mdl}.png"
+    fig_save_path = figoutdir / f"hypnos_{mdl}_{edf_path.name}.png"
     plt.savefig( fig_save_path, format='png', dpi=150, bbox_inches='tight' )
     plt.show()
 
