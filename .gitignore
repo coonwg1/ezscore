@@ -9,6 +9,7 @@ ezscore-0.1.0.tar.gz
 src/ezscore.egg-info/
 dist/
 build/
+hypno_csvs/
 *.egg-info/
 *.pyc
 __pycache__/

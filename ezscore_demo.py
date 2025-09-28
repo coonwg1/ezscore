@@ -50,6 +50,10 @@ data_dir = Path('data/zmax')
 figoutdir = Path('figs')
 figoutdir.mkdir(parents=True, exist_ok=True)
 
+# Directory to save hypnogram CSV files
+figoutdir = Path('hypno_csvs')
+figoutdir.mkdir(parents=True, exist_ok=True)
+
 # Automatically find all ZMax-style left-channel EDFs
 edf_file_fullpaths = list(data_dir.rglob('*.edf'))
 
@@ -121,7 +125,9 @@ for edf_path in edf_file_fullpaths:
     # Plot softmax, hypnogram, and spectrogram summary
     axs = plot_summary( hyp=hyp, hypdens=ypred, spctgm_object=ezs, titl=mdl )
 
-    # Save and display the figure
+    # Save hypnogram CSV and display the figure
+    csv_save_path = figoutdir / f"hypnos_{mdl}_{edf_path.name}.csv"
+    pd.DataFrame(np.asarray(hyp, dtype=int)).to_csv(csv_save_path, index=False, header=False)
     fig_save_path = figoutdir / f"hypnos_{mdl}_{edf_path.name}.png"
     plt.savefig( fig_save_path, format='png', dpi=150, bbox_inches='tight' )
     plt.show()
