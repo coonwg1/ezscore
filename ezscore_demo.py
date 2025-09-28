@@ -1,5 +1,5 @@
 # ezscore_demo.py
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
 #
 #     Copyright: 3 July (c) 2025 The Johns Hopkins University Applied Physics Laboratory LLC (JHU/APL)
 #     License:   MIT License
@@ -11,7 +11,7 @@
 #           bioRxiv, 2025, doi: 10.1101/2025.06.02.657451"
 #     doi: https://doi.org/10.1101/2025.06.02.657451
 #
-# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # 
+# # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # # #   
 # ez6rt=ez6rt.97
 
 import os
