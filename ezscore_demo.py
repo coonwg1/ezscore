@@ -51,8 +51,8 @@ figoutdir = Path('figs')
 figoutdir.mkdir(parents=True, exist_ok=True)
 
 # Directory to save hypnogram CSV files
-figoutdir = Path('hypno_csvs')
-figoutdir.mkdir(parents=True, exist_ok=True)
+csvoutdir = Path('hypno_csvs')
+csvoutdir.mkdir(parents=True, exist_ok=True)
 
 # Automatically find all ZMax-style left-channel EDFs
 edf_file_fullpaths = list(data_dir.rglob('*.edf'))
@@ -126,7 +126,7 @@ for edf_path in edf_file_fullpaths:
     axs = plot_summary( hyp=hyp, hypdens=ypred, spctgm_object=ezs, titl=mdl )
 
     # Save hypnogram CSV... 
-    csv_save_path = figoutdir / f"hypnos_{mdl}_{edf_path.name}.csv"
+    csv_save_path = csvoutdir / f"hypnos_{mdl}_{edf_path.name}.csv"
     pd.DataFrame(np.asarray(hyp, dtype=int)).to_csv(csv_save_path, index=False, header=False)
 
     # Save figure visualizing results
