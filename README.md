@@ -23,14 +23,6 @@
 **ezscore-f just got even better.**  
 We've updated the model training pipeline to include **custom loss functions targeting class imbalance**, improving performance in minority classes such as **N1 sleep**.
 
-The image below shows the updated model's confusion matrix on the same test set used in our original evaluation (Coon et al., 2025):
-
-<p align="center">
-  <img src=".assets/test_confusion_new_model.png" alt="Confusion matrix showing improved classifier performance" width="500">
-</p>
-
-> **Figure**: Confusion matrix of the updated ezscore-f model, `ez6`.  `ez6` is the best-performing version of the model to-date.
-> Notably improved classification of N1 sleep and better artifact separation, following the integration of custom loss functions during training.
 
 ---
 
