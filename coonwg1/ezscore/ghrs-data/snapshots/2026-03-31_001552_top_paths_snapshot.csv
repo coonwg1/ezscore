@@ -1,0 +1,11 @@
+url_path,views_total,views_unique
+/coonwg1/ezscore,24,14
+/coonwg1/ezscore/tree/main/model,8,4
+/coonwg1/ezscore/blob/main/pyproject.toml,7,3
+/coonwg1/ezscore/tree/main/model/ez6,6,2
+/coonwg1/ezscore/blob/main/ezscore_demo.py,5,2
+/coonwg1/ezscore/tree/main/src/ezscore,5,2
+/coonwg1/ezscore/blob/main/README.md,4,2
+/coonwg1/ezscore/blob/main/src/ezscore/model_utils.py,4,2
+/coonwg1/ezscore/blob/main/src/ezscore/inference.py,4,1
+/coonwg1/ezscore/blob/main/LICENSE,3,1
