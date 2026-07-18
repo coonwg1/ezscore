@@ -48,8 +48,8 @@ def load_dcm( edf_path ):
 def load_patcheeg( eeg_path ):
     """Load a PatchEEG EDF or raw CGX file and return MNE Raw object.
 
-    PatchEEG Ch1 and Ch2 are re-referenced using Mapping B3 to match the
-    symmetric left/right forehead channels expected by ezscore:
+    PatchEEG Ch1 and Ch2 are re-referenced to match the symmetric left/right
+    forehead channels expected by ezscore:
 
         eegl = -Ch1
         eegr = Ch2 - Ch1
