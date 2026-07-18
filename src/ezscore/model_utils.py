@@ -17,6 +17,7 @@ os.environ["TF_USE_LEGACY_KERAS"] = "True"
 import tensorflow as tf
 import mne
 import numpy as np
+from datetime import datetime, timezone
 from pathlib import Path
 
 
@@ -40,6 +41,91 @@ def load_dcm( edf_path ):
     data = rawtmp.get_data()
     info = mne.create_info(['eegl', 'eegr'], sfreq=fs, ch_types=['eeg', 'eeg'])
     raw = mne.io.RawArray(data, info)
+
+    return raw
+
+
+def load_patcheeg( eeg_path ):
+    """Load a PatchEEG EDF or raw CGX file and return MNE Raw object.
+
+    PatchEEG Ch1 and Ch2 are re-referenced using Mapping B3 to match the
+    symmetric left/right forehead channels expected by ezscore:
+
+        eegl = -Ch1
+        eegr = Ch2 - Ch1
+    """
+    fs=64  #for now, model expects data sampled at 64Hz
+    eeg_path = Path(eeg_path)
+    file_type = eeg_path.suffix.lower()
+
+    if file_type == ".edf":
+        rawtmp = mne.io.read_raw_edf(eeg_path, preload=True).resample(fs)
+        if len(rawtmp.ch_names) < 2:
+            raise ValueError(f"PatchEEG EDF must contain at least two channels: {eeg_path}")
+        ch1, ch2 = rawtmp.get_data(picks=[0, 1])
+        data = np.vstack([-ch1, ch2 - ch1])
+        meas_date = rawtmp.info["meas_date"]
+
+    elif file_type == ".cgx":
+        header_size = 4096
+        packet_len = 46
+        sample_rate = 500
+        eeg_scale = (4.8 / 6) / 2**24  #24-bit CGX values to Volts
+
+        n_packets = (eeg_path.stat().st_size - header_size) // packet_len
+        if n_packets < 1:
+            raise ValueError(f"CGX file does not contain any complete data packets: {eeg_path}")
+
+        packets = np.memmap(
+            eeg_path,
+            dtype=np.uint8,
+            mode="r",
+            offset=header_size,
+            shape=(n_packets, packet_len),
+        )
+
+        def decode_24bit( byte_idx ):
+            values = packets[:, byte_idx].astype(np.int32)
+            values += packets[:, byte_idx + 1].astype(np.int32) * 256
+            values += packets[:, byte_idx + 2].astype(np.int32) * 65536
+            values[values > 8388607] -= 16777216
+            return values
+
+        ch1 = decode_24bit(3)
+        ch2 = decode_24bit(6)
+        data = np.empty((2, n_packets), dtype=np.float64)
+        data[0] = -ch1 * eeg_scale
+        data[1] = (ch2 - ch1) * eeg_scale
+
+        #The CGX converter stores BCD time/date values in the second packet.
+        timestamp = int.from_bytes(bytes(packets[min(1, n_packets - 1), 37:41]), "little")
+        datestamp = int.from_bytes(bytes(packets[min(1, n_packets - 1), 42:46]), "little")
+        try:
+            hour = ((timestamp >> 28) & 15) * 10 + ((timestamp >> 24) & 15)
+            minute = ((timestamp >> 20) & 15) * 10 + ((timestamp >> 16) & 15)
+            second = ((timestamp >> 12) & 15) * 10 + ((timestamp >> 8) & 15)
+            year = 2000 + ((datestamp >> 20) & 15) * 10 + ((datestamp >> 16) & 15)
+            month = ((datestamp >> 12) & 15) * 10 + ((datestamp >> 8) & 15)
+            day = ((datestamp >> 4) & 15) * 10 + (datestamp & 15)
+            meas_date = datetime(year, month, day, hour, minute, second, tzinfo=timezone.utc)
+        except ValueError:
+            meas_date = None
+
+        del packets, ch1, ch2
+        info = mne.create_info(['eegl', 'eegr'], sfreq=sample_rate, ch_types=['eeg', 'eeg'])
+        raw = mne.io.RawArray(data, info)
+        if meas_date is not None:
+            raw.set_meas_date(meas_date)
+        raw.resample(fs)
+        return raw
+
+    else:
+        raise ValueError(f"Unsupported PatchEEG file type '{file_type}'. Expected .edf or .cgx.")
+
+    info = mne.create_info(['eegl', 'eegr'], sfreq=fs, ch_types=['eeg', 'eeg'])
+    raw = mne.io.RawArray(data, info)
+    if meas_date is not None:
+        raw.set_meas_date(meas_date)
 
     return raw
 
@@ -256,8 +342,12 @@ def ezspectgm( raw, sfreq=64, win_sec=30, overlap_sec=15, fmin=0, fmax=30, trim_
 
 
 
-def plot_summary( hyp, hypdens, spctgm_object, titl="ezscore-f" ):
-    """Plot hypnogram, class probabilities, and dual-channel spectrograms."""
+def plot_summary( hyp, hypdens, spctgm_object, titl="ezscore-f", original_colors=False ):
+    """Plot hypnogram, class probabilities, and dual-channel spectrograms.
+
+    Set ``original_colors=True`` to use the original EzScore stage palette and
+    Spectral_r spectrograms instead of the default magma-based color scheme.
+    """
     import seaborn as sns
     import matplotlib.pyplot as plt
     import pandas as pd
@@ -289,14 +379,45 @@ def plot_summary( hyp, hypdens, spctgm_object, titl="ezscore-f" ):
     hyp_plot = np.where(hyp_plot == 3, -2, hyp_plot)  # just for plotting purposes, so that N3 is the first from the bottom, then  N2 is 2nd, then N1 is third,...
     hyp_plot = np.where(hyp_plot == 1, 3, hyp_plot) 
     hyp_plot = np.where(hyp_plot == -2, 1, hyp_plot)
-    axs['b'].plot(t, hyp_plot, drawstyle="steps-post")
+    if original_colors:
+        stage_colors = {
+            1: [134/255, 46/255, 119/255],
+            2: [255/255, 127/255, 0/255],
+            3: [118/255, 214/255, 255/255],
+            4: [1/255, 121/255, 51/255],
+            5: [234/255, 234/255, 242/255],
+            6: 'k',
+        }
+        palette = [[134/255, 46/255, 119/255, .8], [255/255, 127/255, 0/255, .8],
+                   [118/255, 214/255, 255/255, .8], [1/255, 121/255, 51/255, .8],
+                   [234/255, 234/255, 242/255, 0], [10/255, 67/255, 122/255, .65]]
+        density_columns = ['N1', 'N2', 'N3', 'R', 'W', 'ART']
+        spectrogram_cmap = 'Spectral_r'
+        axs['b'].plot(t, hyp_plot, drawstyle="steps-post")
+        axs['b'].scatter(t[hyp_plot == 4], hyp_plot[hyp_plot == 4], color=stage_colors[4], s=35, zorder=2)
+        axs['b'].scatter(t[hyp_plot == 1], hyp_plot[hyp_plot == 1], color=stage_colors[3], s=35, zorder=2)
+        axs['b'].scatter(t[hyp_plot == 2], hyp_plot[hyp_plot == 2], color=stage_colors[2], s=35, zorder=2)
+        axs['b'].scatter(t[hyp_plot == 6], hyp_plot[hyp_plot == 6], color=stage_colors[6], s=17.5, zorder=2)
+    else:
+        stage_colors = {
+            1: '#DE4968',  #N1: coral
+            2: '#8C2981',  #N2: magenta
+            3: '#2C115F',  #N3: deep purple
+            4: '#F89540',  #REM: orange
+            6: '#0B0614',  #Artifact: near-black
+        }
+        palette = [[44/255, 17/255, 95/255, .88], [140/255, 41/255, 129/255, .88],
+                   [222/255, 73/255, 104/255, .88], [248/255, 149/255, 64/255, .88],
+                   [253/255, 224/255, 161/255, 0], [11/255, 6/255, 20/255, .88]]
+        density_columns = ['N3', 'N2', 'N1', 'R', 'W', 'ART']
+        spectrogram_cmap = 'magma'
+        axs['b'].plot(t, hyp_plot, drawstyle="steps-post", color='#6E6573', linewidth=1, alpha=.65)
+        for stage, plot_value in zip([1, 2, 3, 4, 6], [3, 2, 1, 4, 6]):
+            axs['b'].scatter(t[hyp_plot == plot_value], hyp_plot[hyp_plot == plot_value],
+                             color=stage_colors[stage], s=22, zorder=2)
     axs['b'].set_xlabel('Time (hrs)')
     axs['b'].set_ylabel('Hypnogram')
     axs['b'].set_title(f'{titl} Stages', fontweight='bold')
-    axs['b'].scatter(t[hyp_plot == 4], hyp_plot[hyp_plot == 4], color=[1/255, 121/255, 51/255], s=35, zorder=2)  # REM is forest green
-    axs['b'].scatter(t[hyp_plot == 1], hyp_plot[hyp_plot == 1], color=[118/255, 214/255, 255/255], s=35, zorder=2)  # N3 is light blue
-    axs['b'].scatter(t[hyp_plot == 2], hyp_plot[hyp_plot == 2], color=[255/255, 127/255, 0/255], s=35, zorder=2)  # N2 is Dutch Orange
-    axs['b'].scatter(t[hyp_plot == 6], hyp_plot[hyp_plot == 6], color='k', s=17.5, zorder=2)  # MT/ART is Black
     axs['b'].set_yticks([1, 2, 3, 4, 5, 6])
     axs['b'].set_yticklabels(['N3', 'N2', 'N1', 'REM', 'WAKE', 'ART'])
     axs['b'].set_xlim(t.min(), t.max())
@@ -304,9 +425,7 @@ def plot_summary( hyp, hypdens, spctgm_object, titl="ezscore-f" ):
 
     # Plot softmax probabilities
     probs_df = pd.DataFrame(hypdens, columns=['N1', 'N2', 'N3', 'R', 'W', 'ART'])
-    palette = [[134/255, 46/255, 119/255, .8], [255/255, 127/255, 0/255, .8],
-               [118/255, 214/255, 255/255, .8], [1/255, 121/255, 51/255, .8],
-               [234/255, 234/255, 242/255, 0], [10/255, 67/255, 122/255, .65]]
+    probs_df = probs_df[density_columns]
     probs_df.plot(kind="area", color=palette, stacked=True, lw=0, ax=axs['a'])
     axs['a'].set_xlim(0, len(hypdens))
     axs['a'].set_ylim(0, 1)
@@ -318,13 +437,19 @@ def plot_summary( hyp, hypdens, spctgm_object, titl="ezscore-f" ):
     axs['a'].set_xlabel('')
     axs['a'].grid(True, which='both', axis='both', color='white')
     axs['a'].set_facecolor([234/255, 234/255, 242/255])
-    axs['a'].legend(loc="right")
+    if original_colors:
+        axs['a'].legend(loc="right")
+    else:
+        handles, labels = axs['a'].get_legend_handles_labels()
+        legend_order = [2, 1, 0, 3, 4, 5]
+        axs['a'].legend([handles[idx] for idx in legend_order],
+                        [labels[idx] for idx in legend_order], loc="right")
 
     # Spectrograms
     for tag, Sxx, label in zip(['c', 'd'], [SxxL, SxxR], ['EEG-L', 'EEG-R']):
         vmin, vmax = np.percentile(Sxx, [5, 95])
         norm = Normalize(vmin=vmin, vmax=vmax)
-        axs[tag].pcolormesh(tt, f, Sxx, norm=norm, cmap='Spectral_r', shading="auto")
+        axs[tag].pcolormesh(tt, f, Sxx, norm=norm, cmap=spectrogram_cmap, shading="auto")
         axs[tag].set_ylabel(f"{label}\nFrequency [Hz]")
         axs[tag].set_xlabel("Time (hrs)")
         axs[tag].set_xlim(tt.min(), tt.max())
