@@ -1,12 +1,12 @@
+Copyright © 2025 The Johns Hopkins University Applied Physics Laboratory LLC.
+
+This project is distributed under the terms of the [MIT License](https://github.com/coonwg1/ezscore/blob/main/LICENSE).
+
 # ezscore-f
 
 If you use the `ez6`, `ez6rt`, `ez6moe`, or related EzScore models, please cite:
 
 > Coon WG, Zerr P, Milsap G, Sikder N, Smith M, Dresler M, Reid M. *ezscore-f: A Set of Freely Available, Validated Sleep Stage Classifiers for Forehead EEG.* bioRxiv, 2025. [doi:10.1101/2025.06.02.657451](https://doi.org/10.1101/2025.06.02.657451)
-
-Copyright © 2025 The Johns Hopkins University Applied Physics Laboratory LLC.
-
-This project is distributed under the terms of the [MIT License](https://github.com/coonwg1/ezscore/blob/main/LICENSE).
 
 ### Pretrained, artifact-aware sleep stage classifiers for forehead EEG
 
