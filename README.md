@@ -4,7 +4,7 @@ This project is distributed under the terms of the [MIT License](https://github.
 
 # ezscore-f
 
-If you use the `ez6`, `ez6rt`, `ez6moe`, or related EzScore models, please cite:
+If you use the `ez6`, `ez6rt`, `ez6moe`, or related ezscore models, please cite:
 
 > Coon WG, Zerr P, Milsap G, Sikder N, Smith M, Dresler M, Reid M. *ezscore-f: A Set of Freely Available, Validated Sleep Stage Classifiers for Forehead EEG.* bioRxiv, 2025. [doi:10.1101/2025.06.02.657451](https://doi.org/10.1101/2025.06.02.657451)
 
@@ -18,29 +18,29 @@ If you use the `ez6`, `ez6rt`, `ez6moe`, or related EzScore models, please cite:
 - 🧠 Compatible with two-channel forehead EEG from a range of devices
 
 <p align="center">
-  <img src=".assets/zmax-montage-art-aware.png" alt="EzScore two-channel forehead EEG montage and artifact-aware classification." width="900">
+  <img src=".assets/zmax-montage-art-aware.png" alt="ezscore two-channel forehead EEG montage and artifact-aware classification." width="900">
 </p>
 
-EzScore models were trained on ZMax data and validated on forehead EEG datasets described in the accompanying paper. Device-specific loaders are provided for convenience, but the models are not limited to those devices: compatible two-channel forehead EEG can be supplied through an MNE `Raw` object with `eegl` and `eegr` channels.
+ezscore models were trained on ZMax data and validated on forehead EEG datasets described in the accompanying paper. Device-specific loaders are provided for convenience, but the models are not limited to those devices: compatible two-channel forehead EEG can be supplied through an MNE `Raw` object with `eegl` and `eegr` channels.
 
 ## What's new
 
 ### Updated visualization defaults — July 2026
 
-Hypnograms and hypnodensities now use a magma-derived stage palette, while spectrograms use the `magma` colormap. The original EzScore colors remain available with `original_colors=True`.
+Hypnograms and hypnodensities now use a magma-derived stage palette, while spectrograms use the `magma` colormap. The original ezscore colors remain available with `original_colors=True`.
 
 ### CGX PatchEEG compatibility — July 2026
 
-**CGX PatchEEG is now compatible with EzScore.** The new `load_patcheeg()` loader supports:
+**CGX PatchEEG is now compatible with ezscore.** The new `load_patcheeg()` loader supports:
 
 - Raw CGX Patch binary files (`.cgx`)
 - PatchEEG EDF files (`.edf`)
 - Signed 24-bit CGX packet decoding at the native 500 Hz sampling rate
-- Automatic conversion to the symmetric forehead montage expected by EzScore
+- Automatic conversion to the symmetric forehead montage expected by ezscore
 - BCD recording-date and start-time extraction from raw CGX files
 - Resampling to the model operating rate of 64 Hz
 
-PatchEEG channels are automatically re-referenced to the symmetric left/right forehead montage expected by EzScore:
+PatchEEG channels are automatically re-referenced to the symmetric left/right forehead montage expected by ezscore:
 
 ```text
 eegl = -Ch1       = Fp1 - AFz
@@ -53,7 +53,7 @@ The model training pipeline was updated with custom loss functions targeting cla
 
 ## Using forehead EEG data
 
-EzScore expects symmetric left/right forehead EEG channels named `eegl` and `eegr`. Signals from any device can be used when they provide a comparable montage and are supplied in an MNE `Raw` object. The standard preprocessing pipeline resamples compatible input to the model operating rate of 64 Hz.
+ezscore expects symmetric left/right forehead EEG channels named `eegl` and `eegr`. Signals from any device can be used when they provide a comparable montage and are supplied in an MNE `Raw` object. The standard preprocessing pipeline resamples compatible input to the model operating rate of 64 Hz.
 
 ### Built-in data loaders
 
@@ -67,7 +67,7 @@ These loaders return the same MNE `Raw` representation, allowing the downstream 
 
 ### Other compatible forehead EEG devices
 
-Data from another device does not require a dedicated loader when it can be expressed as symmetric left/right forehead channels. Create an MNE `Raw` object in volts with channel names `eegl` and `eegr`, then use the standard EzScore preprocessing and inference functions:
+Data from another device does not require a dedicated loader when it can be expressed as symmetric left/right forehead channels. Create an MNE `Raw` object in volts with channel names `eegl` and `eegr`, then use the standard ezscore preprocessing and inference functions:
 
 ```python
 import mne
@@ -92,11 +92,11 @@ raw = load_patcheeg("recording.cgx")  # or "recording.edf"
 data_array, raw = preproc(raw, normalize=True)
 ```
 
-`load_patcheeg()` interprets the first two EDF channels as PatchEEG Ch1 and Ch2, then re-references them before returning `eegl` and `eegr`. MNE stores the resulting EEG internally in volts, consistent with the other EzScore loaders.
+`load_patcheeg()` interprets the first two EDF channels as PatchEEG Ch1 and Ch2, then re-references them before returning `eegl` and `eegr`. MNE stores the resulting EEG internally in volts, consistent with the other ezscore loaders.
 
 ## Installation
 
-EzScore supports Python 3.9–3.11. This project uses the [`uv` package manager](https://docs.astral.sh/uv/getting-started/installation/), although an existing compatible Python environment may also be used.
+ezscore supports Python 3.9–3.11. This project uses the [`uv` package manager](https://docs.astral.sh/uv/getting-started/installation/), although an existing compatible Python environment may also be used.
 
 ### Install `uv`
 
@@ -118,7 +118,7 @@ On Windows:
 powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
 ```
 
-### Install EzScore
+### Install ezscore
 
 ```bash
 git clone https://github.com/coonwg1/ezscore.git
@@ -166,7 +166,7 @@ python ezscore_demo.py
 If the installation is working, the script opens a summary figure similar to this:
 
 <p align="center">
-  <img src=".assets/hypnos_ez6.png" alt="EzScore demo output using the included ZMax EDF sample and ez6 model." width="900">
+  <img src=".assets/hypnos_ez6.png" alt="ezscore demo output using the included ZMax EDF sample and ez6 model." width="900">
 </p>
 
 The corresponding consensus-scored PSG reference is shown below:
@@ -196,7 +196,7 @@ If an issue persists, please [open a GitHub issue](https://github.com/coonwg1/ez
 
 ## Citation
 
-If you use the `ez6`, `ez6rt`, `ez6moe`, or related EzScore models, please cite:
+If you use the `ez6`, `ez6rt`, `ez6moe`, or related ezscore models, please cite:
 
 > Coon WG, Zerr P, Milsap G, Sikder N, Smith M, Dresler M, Reid M. *ezscore-f: A Set of Freely Available, Validated Sleep Stage Classifiers for Forehead EEG.* bioRxiv, 2025. [doi:10.1101/2025.06.02.657451](https://doi.org/10.1101/2025.06.02.657451)
 
