@@ -66,59 +66,6 @@ def load_patcheeg( eeg_path ):
         data = np.vstack([-ch1, ch2 - ch1])
         meas_date = rawtmp.info["meas_date"]
 
-    elif file_type == ".cgx":
-        header_size = 4096
-        packet_len = 46
-        sample_rate = 500
-        eeg_scale = (4.8 / 6) / 2**24  #24-bit CGX values to Volts
-
-        n_packets = (eeg_path.stat().st_size - header_size) // packet_len
-        if n_packets < 1:
-            raise ValueError(f"CGX file does not contain any complete data packets: {eeg_path}")
-
-        packets = np.memmap(
-            eeg_path,
-            dtype=np.uint8,
-            mode="r",
-            offset=header_size,
-            shape=(n_packets, packet_len),
-        )
-
-        def decode_24bit( byte_idx ):
-            values = packets[:, byte_idx].astype(np.int32)
-            values += packets[:, byte_idx + 1].astype(np.int32) * 256
-            values += packets[:, byte_idx + 2].astype(np.int32) * 65536
-            values[values > 8388607] -= 16777216
-            return values
-
-        ch1 = decode_24bit(3)
-        ch2 = decode_24bit(6)
-        data = np.empty((2, n_packets), dtype=np.float64)
-        data[0] = -ch1 * eeg_scale
-        data[1] = (ch2 - ch1) * eeg_scale
-
-        #The CGX converter stores BCD time/date values in the second packet.
-        timestamp = int.from_bytes(bytes(packets[min(1, n_packets - 1), 37:41]), "little")
-        datestamp = int.from_bytes(bytes(packets[min(1, n_packets - 1), 42:46]), "little")
-        try:
-            hour = ((timestamp >> 28) & 15) * 10 + ((timestamp >> 24) & 15)
-            minute = ((timestamp >> 20) & 15) * 10 + ((timestamp >> 16) & 15)
-            second = ((timestamp >> 12) & 15) * 10 + ((timestamp >> 8) & 15)
-            year = 2000 + ((datestamp >> 20) & 15) * 10 + ((datestamp >> 16) & 15)
-            month = ((datestamp >> 12) & 15) * 10 + ((datestamp >> 8) & 15)
-            day = ((datestamp >> 4) & 15) * 10 + (datestamp & 15)
-            meas_date = datetime(year, month, day, hour, minute, second, tzinfo=timezone.utc)
-        except ValueError:
-            meas_date = None
-
-        del packets, ch1, ch2
-        info = mne.create_info(['eegl', 'eegr'], sfreq=sample_rate, ch_types=['eeg', 'eeg'])
-        raw = mne.io.RawArray(data, info)
-        if meas_date is not None:
-            raw.set_meas_date(meas_date)
-        raw.resample(fs)
-        return raw
-
     else:
         raise ValueError(f"Unsupported PatchEEG file type '{file_type}'. Expected .edf or .cgx.")
 
